@@ -4,7 +4,7 @@ defmodule ParkingService.Application do
   use Application
 
   def start(_type, _args) do
-    instal_crawler_fuse()
+    install_crawler_fuse()
 
     children = [
       ParkingService.Supervisor,
@@ -20,7 +20,7 @@ defmodule ParkingService.Application do
     :ok
   end
 
-  defp instal_crawler_fuse() do
+  defp install_crawler_fuse() do
     fuse_options = {
       {:standard, 10, 10_000},
       {:reset, :timer.minutes(10)}
