@@ -3,6 +3,7 @@ defmodule ParkingService.ParkingPlaces.Supervisor do
 
   use Supervisor
 
+  alias ParkingService.ParkingPlaces
   alias ParkingService.ParkingPlaces.Store
 
   def start_link(init_arg) do
@@ -13,6 +14,7 @@ defmodule ParkingService.ParkingPlaces.Supervisor do
   def init(_init_arg) do
     children = [
       Store,
+      ParkingPlaces
     ]
 
     Supervisor.init(children, strategy: :rest_for_one)
