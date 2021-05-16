@@ -13,6 +13,7 @@ defmodule ParkingService.Crawler do
   alias ParkingService.ParkingPlaces
   alias ParkingService.ApiClient
 
+  @fuse __MODULE__
   @initial_delay :timer.minutes(1)
   @fetch_delay :timer.minutes(1)
 
@@ -64,6 +65,13 @@ defmodule ParkingService.Crawler do
   end
 
   defp refresh_resources(state) do
+    case :fuse.ask(@fuse, :sync) do
+      :ok -> do_refresh_resources(state)
+      :blown -> state
+    end
+  end
+
+  defp do_refresh_resources(state) do
     resources = ParkingPlaces.get_resources_for_refreshing(DateTime.utc_now())
 
     for resource <- resources do
@@ -78,8 +86,10 @@ defmodule ParkingService.Crawler do
   defp update_resource(resource, {:ok, data}),
     do: ParkingPlaces.update_availability(resource, data.total_places, data.taken_places)
 
-  defp update_resource(resource, {:error, error}),
-    do: ParkingPlaces.set_refreshing_error(resource, error)
+  defp update_resource(resource, {:error, error}) do
+    :fuse.melt(@fuse)
+    ParkingPlaces.set_refreshing_error(resource, error)
+  end
 
   defp schedule_refreshing(state, delay) do
     if state.timer_ref, do: Process.cancel_timer(state.timer_ref)

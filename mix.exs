@@ -33,6 +33,7 @@ defmodule ParkingService.MixProject do
       {:plug_cowboy, "~> 2.0"},
       {:eternal, "~> 1.2"},
       {:httpoison, "~> 1.8"},
+      {:fuse, "~> 2.4"},
 
       # dev deps
       {:credo, "~> 1.0", only: [:dev, :test], runtime: false},
