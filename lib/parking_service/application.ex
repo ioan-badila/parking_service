@@ -5,6 +5,7 @@ defmodule ParkingService.Application do
 
   def start(_type, _args) do
     children = [
+      ParkingService.Supervisor,
       ParkingServiceWeb.Supervisor
     ]
 
