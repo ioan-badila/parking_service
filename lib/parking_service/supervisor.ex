@@ -13,6 +13,7 @@ defmodule ParkingService.Supervisor do
   def init(_init_arg) do
     children = [
       ParkingPlaces.Supervisor,
+      ParkingService.Crawler
     ]
 
     Supervisor.init(children, strategy: :rest_for_one)

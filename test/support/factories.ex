@@ -20,4 +20,16 @@ defmodule ParkingService.Factories do
     {:ok, _child} = Supervisor.restart_child(ParkingPlaces.Supervisor, ParkingPlaces.Store)
   end
 
+  def becomes_true(timeout, _predicate) when timeout < 0, do: false
+
+  def becomes_true(timeout, predicate) do
+    case predicate.() do
+      true ->
+        true
+
+      false ->
+        Process.sleep(10)
+        becomes_true(timeout - 10, predicate)
+    end
+  end
 end
